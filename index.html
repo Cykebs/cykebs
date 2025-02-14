@@ -1,11 +1,96 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat con Bot de entrenamiento</title>
+    <title>San Valentín: Corazones y Rosas Amarillas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+    </style>
 </head>
 <body>
-    <iframe src="https://www.chatbase.co/chatbot-iframe/-usE3DGBhFe3fTkOQFNBW" width="100%" style="height: 100%; min-height: 700px" frameborder="0"></iframe>
+    <script>
+        let angle = 0;
+        let roseOffsets = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            frameRate(30);  // Animación más fluida
+
+            // Inicializamos la posición de más rosas
+            for (let i = 0; i < 50; i++) { // Ahora 50 rosas
+                roseOffsets.push({
+                    x: random(width),
+                    y: random(height),
+                    dx: random(-0.1, 0.1),  // Movimiento suave en el eje X
+                    dy: random(-0.1, 0.1)   // Movimiento suave en el eje Y
+                });
+            }
+        }
+
+        function draw() {
+            background(0);
+
+            // Dibujar las rosas amarillas en el fondo
+            drawBackgroundRoses();
+
+            let heartSize = 150;
+            let offsetX = cos(radians(angle)) * 100;
+            let offsetY = sin(radians(angle)) * 100;
+
+            // Corazón de Argentina
+            drawHeart(width / 2 - offsetX, height / 2 - offsetY, heartSize, color(0, 56, 168), color(255, 255, 255)); // Azul y blanco de Argentina
+            // Corazón de Brasil
+            drawHeart(width / 2 + offsetX, height / 2 + offsetY, heartSize, color(0, 153, 66), color(255, 255, 255)); // Verde y amarillo de Brasil
+
+            angle++;
+        }
+
+        function drawHeart(x, y, size, color1, color2) {
+            fill(color1);
+            beginShape();
+            vertex(x, y);
+            bezierVertex(x - size / 2, y - size / 2, x - size, y + size / 2, x, y + size);
+            bezierVertex(x + size, y + size / 2, x + size / 2, y - size / 2, x, y);
+            endShape(CLOSE);
+
+            fill(color2);
+            ellipse(x - size / 4, y - size / 4, size / 2, size / 2);
+            ellipse(x + size / 4, y - size / 4, size / 2, size / 2);
+        }
+
+        function drawBackgroundRoses() {
+            for (let i = 0; i < roseOffsets.length; i++) {
+                let rose = roseOffsets[i];
+                // Mover las rosas lentamente de manera suave
+                rose.x += rose.dx;
+                rose.y += rose.dy;
+
+                // Rebotar las rosas en los bordes para que no salgan de la pantalla
+                if (rose.x > width || rose.x < 0) rose.dx *= -1;
+                if (rose.y > height || rose.y < 0) rose.dy *= -1;
+
+                drawRose(rose.x, rose.y);
+            }
+        }
+
+        function drawRose(x, y) {
+            fill(255, 255, 0); // Color amarillo para la rosa
+            beginShape();
+            for (let i = 0; i < 360; i++) {
+                let angle = radians(i);
+                let r = 50 * sin(4 * angle); // Tamaño de la rosa
+                let px = x + r * cos(angle);
+                let py = y + r * sin(angle);
+                vertex(px, py);
+            }
+            endShape(CLOSE);
+        }
+    </script>
 </body>
 </html>
